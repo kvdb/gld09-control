@@ -1,0 +1,9 @@
+.venv/
+__pycache__/
+.pytest_cache/
+
+# local reference notes, not tracked
+re/
+
+# local device config
+lumalou.yaml

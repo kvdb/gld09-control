@@ -1,0 +1,63 @@
+# Lumalou standalone configuration
+# Applied to the lamp(s) over Bluetooth by lumalou.py (no app, no cloud, no login).
+
+# All devices get the SAME `settings` below, so they stay in sync. Each is tried in
+# turn; one being out of range (or off) is reported and skipped, the rest still run.
+# (Omit `address` to scan by advertised manufacturer id 0xB603 / the APN name.)
+devices:
+  - name: lamp1
+    address: "AA:BB:CC:DD:EE:01"
+  - name: lamp2
+    address: "AA:BB:CC:DD:EE:02"
+
+# Desired lamp state. Order of application is fixed in code: volume 0 is sent
+# FIRST so configuration never makes noise (a child sleeps next to the lamp).
+settings:
+  sound:
+    enabled: false       # true = play audio
+    volume: 0            # 0-9 (0 = silent)
+    play: rain           # when enabled: rain, ocean, pink_noise, brown_noise, nature,
+                         # highway, ready_settle_sleep, or playlist (uses songs below)
+    # songs: [sleep_baby_sleep, ocean]  # custom playlist (when play: playlist)
+    # timer: 30min       # audio sleep timer: 15min/30min/60min/90min/120min/continuous/1min
+
+  light:
+    enabled: false       # night light stays off
+    brightness: min      # lowest (clock backlight only)
+    color: warm          # when enabled: warm, cool, red, yellow, orange, green,
+                         # blue, purple, night_light, rainbow
+
+  clock:
+    show: true           # show the time continuously
+    format: "24h"        # 24-hour time
+    sync_time: true      # sync the lamp's clock to this machine's time on apply
+    time_scale: normal   # clock speed: normal (real time) or test speeds 10x/60x/3600x
+
+  sleep_trainer:         # the audible sleep-trainer star (red "stay in bed" / green
+                         # "OK to wake"). Off by default: its green wake cue only shows
+                         # WITH an audible alarm (no silent green star on this firmware).
+                         # The silent wake indicator is the routine below.
+    enabled: false
+    bedtime: "19:00"
+    wake: "06:45"
+    alarm: silent        # silent | sound | +1min | +15min..+120min
+
+  routine:               # the lamp's own morning routine: the task-icon sequence shows on
+                         # the cloud face at the start time (silent). A single [heart] is
+                         # our "OK to wake" sign; a longer list steps through tasks.
+    enabled: true
+    start:               # per-day start time (when the icons appear). May also be a single
+                         # "HH:MM" string to use the same time on all 7 days.
+      mon: "06:45"
+      tue: "06:45"
+      wed: "06:45"
+      thu: "06:45"
+      fri: "06:45"
+      sat: "07:00"
+      sun: "07:00"
+    tasks: [heart]       # clothes wash teeth toilet backpack eat read cleanup heart burst spiral
+    # AUTO-CLEAR: the lamp blanks the icon on its OWN later in the day (the firmware ends
+    # the morning routine after a while). There is no clear command or timer we can set,
+    # so there's nothing to configure here. Observed: the icon stays at least ~25 min and
+    # is gone within a few hours (in the app it was gone by evening); exact timing is
+    # firmware-determined.
